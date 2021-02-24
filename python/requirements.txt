@@ -1,0 +1,4 @@
+apns2_client==0.5.4
+requests==2.23.0
+bottle==0.12.18
+pymongo
