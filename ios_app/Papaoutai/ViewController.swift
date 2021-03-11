@@ -1,13 +1,14 @@
 //
 //  ViewController.swift
 //  Papaoutai
-//references: https://www.novelbits.io/intro-ble-mobile-development-ios/
-//https://www.raywenderlich.com/231-core-bluetooth-tutorial-for-ios-heart-rate-monitor#toc-anchor-007
-//https://www.linkedin.com/learning/ios-core-bluetooth-for-developers/reading-a-characteristic-value
+//  references:
+//      https://www.novelbits.io/intro-ble-mobile-development-ios/
+//      https://www.raywenderlich.com/231-core-bluetooth-tutorial-for-ios-heart-rate-monitor#toc-anchor-007
+//      https://www.linkedin.com/learning/ios-core-bluetooth-for-developers/reading-a-characteristic-value
 //  Created by Lila Kelland on 2021-02-01.
-//
 
 // Need to slow down time between scans
+// Also, should iphone never connect with device and use available rssi() when scanning - send data every set interval always and do processing on backend?
 
 import UIKit
 import CoreBluetooth
@@ -15,87 +16,63 @@ import SwiftUI
 import Alamofire
 import SwiftyJSON
 
+struct Session: Decodable {
+    var id: Int = 99
+    var startTime: Int 
+    var duration: Int
+}
+
 class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     var timer = Timer()
-//    var startTime =
     var centralManager: CBCentralManager!
     var arduinoPeripheral: CBPeripheral!
 
     let arduinoServiceUUID = CBUUID.init(string: "2EF7378E-E6A3-85B0-FC27-F82005E222B1")
     let rssiCharUUID = CBUUID.init(string: "4170bbdd-8b46-48ab-9189-0bda5a295589")
     let RSSIMaxLimit = -40
-    var timeStart = Date().timeIntervalSince1970
-    var bathroomTimePassed: Double = 0.0
+    
+    var timeStart: Double = Date().timeIntervalSince1970
+    var bathroomTimePassed: Double = 0
     var count: Int = 0
     
     @IBOutlet weak var rssiLabel: UILabel!
 
     @IBOutlet weak var totalTime: UILabel!
     
+    @IBOutlet weak var launchButton: UIButton!
+    @IBAction func launchStats(_ sender: UIButton) {
+        do {
+            try launchStatsPage()
+        }catch {
+            print("error \(error)")
+        }
+        print("button was presssed - webpage should be launching")
+    }
     
-
-//    let dateFormatter = DateFormatter();
-//    dateFormatter.dateFormat = "yyy-MM-dd hh:mm:ss"
-//
-//        let date = dateFormatter.string(from: Date())
-//
-//        self.totalTime.text = date
-
-//    func runUpdates() {
-//         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(ViewController.updateDisplay)), userInfo: nil, repeats: true)
-//    }
-//
-//
-//    @objc func updateDisplay() {
-//
-////            update feilds with time and rssi
-//    }
-    
+    // is bluetooth on/ start scanning
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-//        updates when bluetooth periheral is turned on or off / start scanning
         print("Central state update")
+        
         if central.state == CBManagerState.poweredOn {
             print("BLE powered on")
             print("scanning for arduino")
             central.scanForPeripherals(withServices: [arduinoServiceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
-        } else {
+       } else {
             print("Something wrong with BLE")
         }
     }
-    
-    func getStartTime() {
-        let now = Date()
-        self.timeStart = now.timeIntervalSince1970
-        print("start time \(timeStart)")
-//
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "HH:mm:ss"
-//        dateFormatter.timeZone = TimeZone(abbreviation: "AST")
-//        let convertedDateTime = dateFormatter.string(from: now)
-//        print(convertedDateTime)
-////                convertedDate = dateFormatter.stringFromDate(currentDate)
-    }
-    
-    func convertTimeIntervalToDisplay(){
-        self.bathroomTimePassed = Date().timeIntervalSince1970 - self.timeStart
-      
-        let hours = Int(floor(self.bathroomTimePassed/3600))
-        let minutes = Int(floor(self.bathroomTimePassed/60))
-        let seconds = Int(round(self.bathroomTimePassed - Double(minutes * 60)))
-        
-        totalTime.text = (String(format: "%02d:%02d:%02d", hours, minutes, seconds))
-    }
-    
+
+    // discover specific peripheral
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         print("Still scanning...")
         if let pname = peripheral.name {
         
             if pname == "Nano" {
-                print ("yay found Nano - checking distance...")
+                print ("yay found arduino - checking distance...")
                 guard ((RSSI.intValue > RSSIMaxLimit) && (RSSI.intValue < 0))
                     else {
-                    print("Discovered perhiperal too far, at  \(RSSI.intValue)")
+                    print("arduino too far, at  \(RSSI.intValue)")
                     return
                 }
                 getStartTime()
@@ -147,9 +124,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
                 } else {
                     print("Couldn't find RSSI characteristic")
                     centralManager.cancelPeripheralConnection(peripheral)
-
                 }
-
             }
         }
     }
@@ -158,16 +133,17 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { (timer) in self.arduinoPeripheral?.readValue(for: curChar)
         }
     }
-    
+ 
 //    get value
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        
-       // if let val = characteristic.value {
+        if characteristic.value != nil {
             if characteristic.uuid == rssiCharUUID {
 
                 let rssiValue = rssiConvert(from: characteristic)
                 print (rssiValue)
+                rssiLabel.textColor = .systemIndigo
                 rssiLabel.text = String(rssiValue)
+                totalTime.textColor = .systemIndigo
                 convertTimeIntervalToDisplay()
                 
                 if rssiValue > abs(RSSIMaxLimit) {
@@ -177,15 +153,10 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
                     } else {
                         count = 0
                         print("\(rssiValue) is too far, disconnecting")
-                        do {
-                            try logTime()
-                            print("just tried to log")
-                        } catch let error {
-                            print(error)
-                        }
+
                         centralManager.cancelPeripheralConnection(peripheral)
                     }
-               // }
+                }
                 
             } else {
                 print("something going on with characteristics - disconnecting")
@@ -193,40 +164,20 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
             }
         }
     }
-    
-    private func rssiConvert (from characteristic: CBCharacteristic) -> Int {
-      guard let characteristicData = characteristic.value else { return -1 }
-        let byteArray = [UInt8](characteristicData)
-        return Int(byteArray[0])
-    }
-
-    
-    func logTime() throws  {
-        let parameters = [
-//            "user_id": token?,
-            "startTime": self.timeStart,
-            "elapsedTime": self.bathroomTimePassed
-            ]
-        print(parameters)
-        AF.request("\(Environment.url_string)/addSession", method: .get, parameters: parameters)
-           .validate()
-          .responseString {
-            response in
-               switch response.result {
-                   case .success( _):
-                       print("parameters set on server - sucess!")
-//                       self.finishSetLoad = true
-                   case .failure(let error):
-//                        self.finishSetLoad = false
-                       print(error)
-                }
-            }
-    }
-
-    
+        
 //    on disconnect
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         if peripheral == self.arduinoPeripheral {
+            do {
+                try logTime()
+                print("just tried to log")
+            } catch let error {
+                print(error)
+            }
+            
+            totalTime.text = "00:00:00"
+            rssiLabel.textColor = UIColor(white: 1, alpha: 1)
+            totalTime.textColor = UIColor(white: 1, alpha: 1)
             print("Disconnected")
             self.arduinoPeripheral = nil
             print("Central scanning for", ArduinoPeripheral.arduinoServiceUUID);
@@ -235,10 +186,80 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         }
     }
     
+    
+    private func rssiConvert (from characteristic: CBCharacteristic) -> Int {
+      guard let characteristicData = characteristic.value else { return -1 }
+        let byteArray = [UInt8](characteristicData)
+        return Int(byteArray[0])
+    }
+    
+    func getStartTime() {
+        let now = Date()
+        self.timeStart = now.timeIntervalSince1970
+        print("start time \(timeStart)")
+    }
+    
+    func logTime() throws  {
+        let id = String(123)
+        let startTime = String(self.timeStart)
+        let duration = String(self.bathroomTimePassed)
+//        let headers = [
+//            "id": String(123),
+//            "startTime": String(self.timeStart),
+//            "duration": String(self.bathroomTimePassed)
+//            ]
+//        print(headers)
+//        APIFunctions.functions.addSession(
+        AF.request("http://192.168.4.29:5000/add", method: .post, headers: ["id": id, "startTime": startTime, "duration": duration])
+           .validate()
+          .responseString {
+            response in
+               switch response.result {
+                   case .success( _):
+                       print("time sent to server - sucess!")
+                   case .failure(let error):
+                       print(error)
+                }
+            }
+    }
+    
+    func launchStatsPage() throws  {
+        let parameters = [
+            "user_id": 123
+            ]
+        print(parameters)
+        AF.request("\(Environment.url_string)/launchStatsPage", method: .get, parameters: parameters)
+           .validate()
+          .responseString {
+            response in
+               switch response.result {
+                   case .success( _):
+                       print("user_id sent to server - sucess!")
+//                    TODO - actually launch webpage
+                   case .failure(let error):
+                       print("error: \(error)")
+                }
+            }
+    }
+    
+    func convertTimeIntervalToDisplay(){
+        self.bathroomTimePassed = Date().timeIntervalSince1970 - self.timeStart
+      
+        let hours = Int(floor(self.bathroomTimePassed/3600))
+        let minutes = Int(floor(self.bathroomTimePassed/60))
+        let seconds = Int(round(self.bathroomTimePassed - Double(minutes * 60)))
+        
+        totalTime.text = (String(format: "%02d:%02d:%02d", hours, minutes, seconds))
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         centralManager = CBCentralManager(delegate: self, queue: nil)
-//        runUpdates()
+        launchButton.backgroundColor = .systemGray3
+        launchButton.layer.cornerRadius = launchButton.frame.height / 6
+        launchButton.layer.shadowOpacity = 0.25
+        launchButton.layer.shadowRadius = 5
+        launchButton.layer.shadowOffset = CGSize(width: 0, height: 5)
     }
 
 

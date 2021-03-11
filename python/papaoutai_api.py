@@ -4,8 +4,8 @@
 
 from bottle import Bottle, response, request
 import json
-#from bson.json_util import loads
-#from bson.json_util import dumpsp
+from bson.json_util import loads
+from bson.json_util import dumps
 from pymongo import MongoClient
 from pprint import pprint
 import time
@@ -18,46 +18,38 @@ app = Bottle()
 def addSession():
     """Adds time spent in bathroom entry when arduino disconnects from iPhone"""
     try:
+        user_id = request.GET.get("user_id")
+        start_time = request.GET.get("startTime")
+        elapsed_time = request.GET.get("elapsedTime")
+        
         session_data = {
-            "start_time":"startTime",
-            "elaspsed_time": "elapsedTime"
+            "user_id" : user_id,
+            "start_time" : start_time,
+            "elaspsed_time" : elapsed_time
         } 
-        #TODO add in id
-   # db.papaoutai_sessions.insert_one(session_data) 
-    #print(session_data)
+        print(session_data)
+
+        # db.papaoutaiSession.insert_one({"$set":session_data}, upsert=True)
+        with open("papaoutai_session.json", "w") as outfile: 
+            json.dump(session_data, outfile) 
+
+        return("success")
+
     except: 
         print ("didnt work")
 
 
-# @app.route('/setToken')
-# def getToken():
-#     """Get token for APNS"""
-
-#     token = request.GET.get("tokenString")
-#     setToken(token)
-
-# def setToken(token):
-#     tokenData = {
-#           "token": token,
-#     }
-#     db.papaoutai_token.insert_one(tokenData)
-
-
-# @app.route('/fakeXcode')
-# #simulated sensors - in times when sensors not available
-# def GetSimulatedValues():
-#     return({"startTime":1564646464434.5664,"elaspsedTime":3.0})
-
-#         with open("isBurning.json", "w") as outfile: 
-#             json.dump(actuallyBurning, outfile) 
-        
-#         db.unBurntIsBurning.insert_one({actuallyBurning})
-#             #TODO add grab /link other required info for supervised learning 
-#         return("success")
-        
-#     except:
-#         return("didn't work")
-    
+@app.route('/launchStatsPage')
+def launchStatsPage():
+    """launches webpage after ios button pressed"""
+    try:
+        user_id = request.GET.get("user_id")
+        print("yay", user_id)
+        return("success")
+       #TODO retrieve data for user_id from db - and run webpage
+  
+    except: 
+        print ("didnt work")
 
 
 if __name__ == '__main__':

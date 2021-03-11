@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (5.2.1)
+  - Alamofire (5.4.1)
   - BlueCapKit (0.7.0)
   - SwiftyJSON (4.3.0)
 
@@ -15,7 +15,7 @@ SPEC REPOS:
     - SwiftyJSON
 
 SPEC CHECKSUMS:
-  Alamofire: e911732990610fe89af59ac0077f923d72dc3dfd
+  Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
   BlueCapKit: b13b8715d4de6f325971c4dd5bc33598697dad2f
   SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
 

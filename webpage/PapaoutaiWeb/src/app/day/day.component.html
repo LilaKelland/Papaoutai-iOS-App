@@ -1,0 +1,15 @@
+<img src="assest/picture.jpg">
+<div class="centered">Papaooutai Stats</div>
+
+<div [hidden] = '!linegraph'> 
+    <p>This will display bargraph for day </p>
+
+</div>
+
+<div [hidden]= 'linegraph'> 
+    <p>This will display linegraph for day </p>
+</div>
+
+<div>
+    <button (click)="onLinegraphToggle($event)">{{label()}}</button>
+</div>

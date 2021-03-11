@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,6 +11,9 @@
 		AA380D5C4197CE4A2AB38CA3 /* Pods_PapaoutaiTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F599AF460EEFF93764E79DF /* Pods_PapaoutaiTests.framework */; };
 		B71BB1FF1DD60EB2ED793901 /* Pods_Papaoutai.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56335A3EB796BB971FE29E19 /* Pods_Papaoutai.framework */; };
 		B9223B6625CC490C00DF5B22 /* ArduinoPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9223B6525CC490C00DF5B22 /* ArduinoPeripheral.swift */; };
+		B9325C6D25F9582E0055B895 /* APIFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9325C6C25F9582E0055B895 /* APIFunctions.swift */; };
+		B9325C7325F95DDF0055B895 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = B9325C7225F95DDF0055B895 /* Alamofire */; };
+		B9325C7925F961E90055B895 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = B9325C7825F961E90055B895 /* SwiftyJSON */; };
 		B9C0FBA125C8841A000656C9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C0FBA025C8841A000656C9 /* AppDelegate.swift */; };
 		B9C0FBA325C8841A000656C9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C0FBA225C8841A000656C9 /* SceneDelegate.swift */; };
 		B9C0FBA525C8841A000656C9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C0FBA425C8841A000656C9 /* ViewController.swift */; };
@@ -47,6 +50,7 @@
 		56335A3EB796BB971FE29E19 /* Pods_Papaoutai.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Papaoutai.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F599AF460EEFF93764E79DF /* Pods_PapaoutaiTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PapaoutaiTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9223B6525CC490C00DF5B22 /* ArduinoPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArduinoPeripheral.swift; sourceTree = "<group>"; };
+		B9325C6C25F9582E0055B895 /* APIFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIFunctions.swift; sourceTree = "<group>"; };
 		B9C0FB9D25C8841A000656C9 /* Papaoutai.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Papaoutai.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9C0FBA025C8841A000656C9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B9C0FBA225C8841A000656C9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -72,7 +76,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9325C7925F961E90055B895 /* SwiftyJSON in Frameworks */,
 				B71BB1FF1DD60EB2ED793901 /* Pods_Papaoutai.framework in Frameworks */,
+				B9325C7325F95DDF0055B895 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +142,7 @@
 				B9C0FBA025C8841A000656C9 /* AppDelegate.swift */,
 				B9C0FBA225C8841A000656C9 /* SceneDelegate.swift */,
 				B9C0FBA425C8841A000656C9 /* ViewController.swift */,
+				B9325C6C25F9582E0055B895 /* APIFunctions.swift */,
 				B9F5B5DB25E5534C00C53E85 /* Environment.swift */,
 				B9223B6525CC490C00DF5B22 /* ArduinoPeripheral.swift */,
 				B9C0FBA625C8841A000656C9 /* Main.storyboard */,
@@ -192,6 +199,10 @@
 			dependencies = (
 			);
 			name = Papaoutai;
+			packageProductDependencies = (
+				B9325C7225F95DDF0055B895 /* Alamofire */,
+				B9325C7825F961E90055B895 /* SwiftyJSON */,
+			);
 			productName = Papaoutai;
 			productReference = B9C0FB9D25C8841A000656C9 /* Papaoutai.app */;
 			productType = "com.apple.product-type.application";
@@ -266,6 +277,10 @@
 				Base,
 			);
 			mainGroup = B9C0FB9425C8841A000656C9;
+			packageReferences = (
+				B9325C7125F95DDF0055B895 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				B9325C7725F961E90055B895 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+			);
 			productRefGroup = B9C0FB9E25C8841A000656C9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -416,6 +431,7 @@
 				B9C0FBA525C8841A000656C9 /* ViewController.swift in Sources */,
 				B9C0FBA125C8841A000656C9 /* AppDelegate.swift in Sources */,
 				B9C0FBA325C8841A000656C9 /* SceneDelegate.swift in Sources */,
+				B9325C6D25F9582E0055B895 /* APIFunctions.swift in Sources */,
 				B9F5B5DC25E5534C00C53E85 /* Environment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -755,6 +771,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B9325C7125F95DDF0055B895 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.4.1;
+			};
+		};
+		B9325C7725F961E90055B895 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B9325C7225F95DDF0055B895 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B9325C7125F95DDF0055B895 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		B9325C7825F961E90055B895 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B9325C7725F961E90055B895 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B9C0FB9525C8841A000656C9 /* Project object */;
 }
