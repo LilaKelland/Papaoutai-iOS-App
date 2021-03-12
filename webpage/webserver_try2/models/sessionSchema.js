@@ -23,5 +23,7 @@ const session = new Schema({
 //   }
 });
 
-const Data = mongoose.model('Data', session);
-module.exports = Data;
+
+// Note to me 'Session' is name of collection - will be found on Atals as sessions
+const Session = mongoose.model('Session', session);
+module.exports = Session;

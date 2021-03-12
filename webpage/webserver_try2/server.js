@@ -1,21 +1,21 @@
 const express = require('express');
 const mongoose = require('mongoose');
-// const config = require('config');
-var Data = require('./models/sessionSchema');
+const config = require('config');
+var Session = require('./models/sessionSchema');
 
 var app = express();
 
 
 app.use(express.json());
 
-// const db = config.get('mongoURI');
+const db = config.get('mongoURI');
 
-mongoose.connect("mongodb://localhost:27017/papaDB") //, {useFindAndModify: false})
+// mongoose.connect("mongodb://localhost:27017/papaDB") //, {useFindAndModify: false})
 
-// mongoose
-//   .connect(db, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false })
-//   .then(() => console.log('MongoDB Connected...'))
-//   .catch(err => console.log(err));
+mongoose
+  .connect(db, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false })
+  .then(() => console.log('MongoDB Connected...'))
+  .catch(err => console.log(err));
 
 mongoose.connection.once("open", () => {
     console.log("connected to DB!")
@@ -33,7 +33,7 @@ mongoose.connection.once("open", () => {
 
 // //FETCH sessions
 app.get('/fetch', (req, res) => {
-  Data.find({}).then((items) => {
+  Session.find({}).then((items) => {
     res.send(items)
   })
   //(if only want emplyees in bracket {})
@@ -41,7 +41,7 @@ app.get('/fetch', (req, res) => {
 
 // CREATE a new entry
 app.post('/add', (req, res) => {
-    var session = new Data( {
+    var session = new Session( {
       id: req.get("id"),
       startTime: req.get("startTime"),
       duration: req.get("duration"),
