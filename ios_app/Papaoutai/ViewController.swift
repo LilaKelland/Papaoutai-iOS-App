@@ -16,11 +16,11 @@ import SwiftUI
 import Alamofire
 import SwiftyJSON
 
-struct Session: Decodable {
-    var id: Int = 99
-    var startTime: Int 
-    var duration: Int
-}
+//struct Session: Decodable {
+//    var id: Int = 99
+//    var startTime: Int
+//    var duration: Int
+//}
 
 class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
@@ -32,7 +32,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     let rssiCharUUID = CBUUID.init(string: "4170bbdd-8b46-48ab-9189-0bda5a295589")
     let RSSIMaxLimit = -40
     
-    var timeStart: Double = Date().timeIntervalSince1970
+    var startTime: Double = Date().timeIntervalSince1970
     var bathroomTimePassed: Double = 0
     var count: Int = 0
     
@@ -195,22 +195,24 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     
     func getStartTime() {
         let now = Date()
-        self.timeStart = now.timeIntervalSince1970
-        print("start time \(timeStart)")
+        self.startTime = now.timeIntervalSince1970
+        print("start time \(startTime)")
     }
     
     func logTime() throws  {
-        let id = String(123)
-        let startTime = String(self.timeStart)
-        let duration = String(self.bathroomTimePassed)
-//        let headers = [
-//            "id": String(123),
-//            "startTime": String(self.timeStart),
-//            "duration": String(self.bathroomTimePassed)
-//            ]
+//        let user_id = String(123)
+//        let start_time = String(self.startTime)
+//        let duration = String(self.bathroomTimePassed)
+        let parameters = [
+            "user_id": String(123),
+            "startTime": String(self.startTime),
+            "duration": String(self.bathroomTimePassed)
+            ]
+        print(parameters)
 //        print(headers)
 //        APIFunctions.functions.addSession(
-        AF.request("http://192.168.4.29:5000/add", method: .post, headers: ["id": id, "startTime": startTime, "duration": duration])
+//        "http://192.168.4.29:5000/add" for node server
+        AF.request("http://192.168.4.29:8080/addSession", method: .post, parameters: parameters)
            .validate()
           .responseString {
             response in
@@ -243,7 +245,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     }
     
     func convertTimeIntervalToDisplay(){
-        self.bathroomTimePassed = Date().timeIntervalSince1970 - self.timeStart
+        self.bathroomTimePassed = Date().timeIntervalSince1970 - self.startTime
       
         let hours = Int(floor(self.bathroomTimePassed/3600))
         let minutes = Int(floor(self.bathroomTimePassed/60))
