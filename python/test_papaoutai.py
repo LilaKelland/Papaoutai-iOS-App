@@ -1,5 +1,5 @@
 import pytest
-from papaoutai_main import split_session_entry_into_min_per_hours, upload_hour_segment_to_db #, find_exisiting_record, calc_total_bathrooming_for_day, calc_avg_bathrooming_for_week, format_for_charting_day
+from papaoutai import split_session_entry_into_min_per_hours, upload_hour_segment_to_db #, find_exisiting_record, calc_total_bathrooming_for_day, calc_avg_bathrooming_for_week, format_for_charting_day
 
 # #TODO monkey patch api calls in cofftest.py
 # @pytest.fixture
@@ -21,8 +21,6 @@ session_day = start_datetime.day
 user_id = 123
 _id = 12345
 
-def test_format_for_charting_day():
-    format_for_charting_day(day: date)
 # test_split_session_entry_into_min_per_hours():
 
 # test rollover year, roll over month, leap year, rollover day then redactor
@@ -43,9 +41,9 @@ def test_always_fails()
     assert False
 
 
-def test_with_input():
-    result = with_input("blue")
-    assert result["old"] == "blue"
+# def test_with_input():
+#     result = with_input("blue")
+#     assert result["old"] == "blue"
 
 def split_session_entry_into_min_per_hours_test_case():
     pass

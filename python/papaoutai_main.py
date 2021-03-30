@@ -10,13 +10,13 @@ import logging
 cluster = MongoClient(config.mongoURI)
 db = cluster.get_database("papaoutai")  # or db = cluster["papaoutai"]
 
-#db collections
+# db collections
 sessions = db.sessions
 chart_data = db.chart_data
 now = time.time()
 
 
-def split_session_entry_into_min_per_hours(): #(session_id)
+def split_session_entry_into_min_per_hours():  # (session_id)
     # called when new entry * OR do at same time?? - pass in values??
     # TODO grab start_datetime, duration, from db or from API
     # TODO if existing session! (add to it )
@@ -29,7 +29,7 @@ def split_session_entry_into_min_per_hours(): #(session_id)
 
     session_id = _id
 
-    end_datetime = start_datetime + datetime.timedelta(seconds = duration)
+    end_datetime = start_datetime + datetime.timedelta(seconds=duration)
 
     if end_datetime.hour < start_datetime.hour:
         end_hour = end_datetime.hour + 24
@@ -65,38 +65,39 @@ def split_session_entry_into_min_per_hours(): #(session_id)
         print(f"datetime_start_of_the_hour = {datetime_start_of_the_hour} ")
 
         return (user_id, session_id, session_minutes, datetime_start_of_the_hour)
-        
 
 
-def upload_hour_segment_to_db(user_id, session_id, session_minutes, datetime_start_of_the_hour):
-    # try: 
+def upload_hour_segment_to_db(
+    user_id, session_id, session_minutes, datetime_start_of_the_hour
+):
+    # try:
     #     exisiting_session_mintues = find_exisiting_record(datetime_start_of_the_hour, user_id)
-  
-    
-        # if exisiting_session_mintues != nil:
-        #         session_minutes = exisiting_session_mintues['session_minutes'] + session_minutes
-        #         if session_minutes > 60: 
-        #             logging.exception("too many minutes")
-        #             session_minutes = 60
-        # else:
-            try:
-                new_entry = {
-                    'user_id': user_id,
-                    'session_id': _id,
-                    'session_minutes': session_minutes,
-                    'datetime_start_of_the_hour': datetime_start_of_the_hour
-                    }
-                chart_data.insert_one(new_entry)
-                
-                print(new_entry)
-                print("yay new entry sucess! \n")
 
-            except:
-                print("ACK didnt get in db! \n")
-                logging.exception(f'Exception logged - didnt insert chart data record in db') 
-    # except:
-    #     logging.exception(f'Exception logged - couldn''t find existing minutes')
-        
+    # if exisiting_session_mintues != nil:
+    #         session_minutes = exisiting_session_mintues['session_minutes'] + session_minutes
+    #         if session_minutes > 60:
+    #             logging.exception("too many minutes")
+    #             session_minutes = 60
+    # else:
+    try:
+        new_entry = {
+            "user_id": user_id,
+            "session_id": _id,
+            "session_minutes": session_minutes,
+            "datetime_start_of_the_hour": datetime_start_of_the_hour,
+        }
+        chart_data.insert_one(new_entry)
+
+        print(new_entry)
+        print("yay new entry sucess! \n")
+
+    except:
+        print("ACK didnt get in db! \n")
+        logging.exception(f"Exception logged - didnt insert chart data record in db")
+
+
+# except:
+#     logging.exception(f'Exception logged - couldn''t find existing minutes')
 
 
 # upload_hour_segment_to_db(user_id, session_id, session_minutes, datetime_start_of_the_hour)
@@ -126,9 +127,9 @@ def calc_total_bathrooming_for_day(day: date):
             bathroom_minutes_per_hour.append(session_minutes)
 
     total_bathrooming_minutes = sum(bathroom_minutes_per_hour)
-  
+
     print(total_bathrooming_minutes)
-    return total_bathrooming_minutes  
+    return total_bathrooming_minutes
 
 
 def calc_bathrooming_for_week(day: date):
@@ -169,6 +170,12 @@ def calc_bathrooming_for_week(day: date):
     print(f"avg_bathrooming_min_per_day {avg_bathrooming_min_per_day}")
     print(f"weekday_abrevs {weekday_abrvs}")
     print(f"days of month {days_of_month}")
-    return (week_daily_totals, avg_bathrooming_min_per_day, weekday_abrvs, days_of_month)
+    return (
+        week_daily_totals,
+        avg_bathrooming_min_per_day,
+        weekday_abrvs,
+        days_of_month,
+    )
+
 
 calc_total_bathrooming_for_day(datetime.datetime(1970, 1, 5))
