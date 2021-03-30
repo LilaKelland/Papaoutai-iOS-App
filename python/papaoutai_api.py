@@ -62,7 +62,7 @@ def launchStatsPage():
 
 
 if __name__ == "__main__":
-    # app.run(host='0.0.0.0', port=8080, debug=True, reloader=True) # run on pi server
-    app.run(
-        host="192.168.4.29", port=8080, debug=True, reloader=True
-    )  # run on computer
+    app.run(host='0.0.0.0', port=8080, debug=True, reloader=True) # run on pi server
+    # app.run(
+    #     host="192.168.4.29", port=8080, debug=True, reloader=True
+    # )  # run on computer

@@ -3,6 +3,8 @@ run this before running Papaoutai_API/ Papaoutai_Main"""
 
 import pymongo
 from pymongo import MongoClient
+import /config/default
+
 
 # TODO - Change this out
 client = MongoClient("mongodb://127.0.0.1:27017/pymongo_test")

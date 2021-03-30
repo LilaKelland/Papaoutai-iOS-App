@@ -1,19 +1,30 @@
 import pytest
-import papaoutai_main
+from papaoutai_main import split_session_entry_into_min_per_hours, upload_hour_segment_to_db #, find_exisiting_record, calc_total_bathrooming_for_day, calc_avg_bathrooming_for_week, format_for_charting_day
 
-@pytest.fixture
-def example_new_session():
-    return (
-        new_session = {
-            "user_id": 123,
-            "start_time": now,
-            "duration": 5234,
-            "start_datetime": datetime.datetime.fromtimestamp(now)
-        }
-    )
+# #TODO monkey patch api calls in cofftest.py
+# @pytest.fixture
+# def example_new_session():
+#     return (
+#         new_session = {
+#             "user_id": 123,
+#             "start_time": ,
+#             "duration": 5234,
+#             "start_datetime": datetime.datetime.fromtimestamp()
+#         }
+#     )
 
-# import test
-# testsplit_session_entry_into_min_per_hours()
+start_time = (323737 + 36000)
+start_datetime = datetime.datetime.fromtimestamp(start_time)
+duration = 4567
+end_datetime = start_datetime + datetime.timedelta(seconds=duration)
+session_day = start_datetime.day
+user_id = 123
+_id = 12345
+
+def test_format_for_charting_day():
+    format_for_charting_day(day: date)
+# test_split_session_entry_into_min_per_hours():
+
 # test rollover year, roll over month, leap year, rollover day then redactor
 # time zone
 # normalassert
@@ -25,40 +36,27 @@ def example_new_session():
 # empty at beginning
 # None
 
+def test_always_passes():
+    assert True
 
-class TestAbilityToTest(unittest.TestCase):
-    def test_ability_to_test(self):
-        self.assertEqual(1, 1)
+def test_always_fails()
+    assert False
 
 
 def test_with_input():
     result = with_input("blue")
     assert result["old"] == "blue"
 
-class split_session_entry_into_min_per_hours_test_case(unittest.TestCase):
+def split_session_entry_into_min_per_hours_test_case():
+    pass
 
-    # def setUp(self):
-    #     self.new_session = {
-    #         'user_id': 123,
-    #         'start_time': 1 #replace with datetime.datetime,
-    #         'duration': 5234,
-    #         'start_datetime': datetime.datetime.fromtimestamp(15678744)
-    #         }
 
-    def test_rollover_day(self):
+def test_rollover_day(self):
         pass
 
-    def test_single_day(self):
+def test_single_day(self):
         pass
 
     # def tearDown(self):
     #     self.entry.dispose() or delete db entry
 
-
-class upload_hour_segment_to_db_test_case(unittest.TestCase):
-    def setUp(self):
-        pass
-
-
-if __name__ == "__main__":
-    unittest.main()
