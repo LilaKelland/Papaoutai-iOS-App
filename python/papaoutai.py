@@ -11,7 +11,7 @@ cluster = MongoClient(config.mongoURI)
 db = cluster.get_database("papaoutai")  # or db = cluster["papaoutai"]
 
 sessions = db.sessions
-# chart_data = db.chart_data
+chart_data = db.chart_data
 now = time.time()
 
 
