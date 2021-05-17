@@ -1,6 +1,0 @@
-framework module Pods_Papaoutai_PapaoutaiUITests {
-  umbrella header "Pods-Papaoutai-PapaoutaiUITests-umbrella.h"
-
-  export *
-  module * { export * }
-}
