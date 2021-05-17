@@ -212,7 +212,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
 //        print(headers)
 //        APIFunctions.functions.addSession(
 //        "http://192.168.4.29:5000/add" for node server
-        AF.request("https://papaoutai-rest-api.herokuapp.com/Session", method: .post, parameters: parameters)
+        AF.request("https://papaoutai-rest-api.herokuapp.com/session", method: .post, parameters: parameters)
            .validate()
           .responseString {
             response in
